@@ -68,4 +68,8 @@ public class MainActivity extends AppCompatActivity {
         gameBoard.invalidate();
     }
 
+    public void BTNClearPress(View view){
+        gameBoardSolver.clear();
+    }
+
 }

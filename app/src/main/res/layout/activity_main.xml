@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        custom:layout_constraintBottom_toBottomOf="parent"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -21,7 +24,8 @@
             android:text="Sudoku"
             android:textAlignment="center"
             android:textColor="@color/bodyColor"
-            android:textSize="30sp" />
+            android:textFontWeight="1000"
+            android:textSize="40sp" />
 
         <com.bhadrik.sudoku.SudokuBoard
             android:id="@+id/sudokuBoard"
@@ -31,10 +35,10 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             custom:boardColor="#A3A3A3"
-            custom:cellFillColor="#C9EDF1"
-            custom:cellHighlightColor="#D5D5D5"
-            custom:latterColor="#222222"
-            custom:latterSolveColor="#2E3B3C"
+            custom:cellFillColor="#D0EBED"
+            custom:cellHighlightColor="#ECECEC"
+            custom:textColor="#606060"
+            custom:textSolveColor="#2E3B3C"
             custom:thinLineColor="#D5D5D5" />
 
         <LinearLayout
@@ -197,9 +201,10 @@
                 android:layout_weight="1"
                 android:backgroundTint="#4CA6B1"
                 android:onClick="BTNClearPress"
+                android:padding="20dp"
                 android:text="@string/clear"
                 android:textColor="#E0EFF1"
-                android:textSize="40sp"/>
+                android:textSize="25sp" />
 
             <Button
                 android:id="@+id/BTNSolve"
@@ -210,20 +215,27 @@
                 android:layout_weight="1"
                 android:backgroundTint="#4CA6B1"
                 android:onClick="BTNSolvePress"
+                android:padding="20dp"
                 android:text="@string/solve"
                 android:textColor="#E0EFF1"
-                android:textSize="40sp"/>
+                android:textSize="25sp" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/Status"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Solving status"
-            android:textSize="20sp"
-            android:layout_margin="10dp"
-            android:textAlignment="center" />
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/Status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Solving status"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

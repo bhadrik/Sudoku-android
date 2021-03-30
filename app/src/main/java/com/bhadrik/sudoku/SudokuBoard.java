@@ -16,14 +16,14 @@ public class SudokuBoard extends View {
     private final int thinLineColor;
     private final int cellFillColor;
     private final int cellHighlightColor;
-    private final int latterColor;
-    private final int latterSolveColor;
+    private final int textColor;
+    private final int textSolveColor;
 
     private final Paint boardColorPaint = new Paint();
     private final Paint cellFillColorPaint = new Paint();
     private final Paint cellHighlightColorPaint = new Paint();
-    private final Paint latterColorPaint = new Paint();
-    private final Rect latterPaintBounds = new Rect();
+    private final Paint textColorPaint = new Paint();
+    private final Rect textPaintBounds = new Rect();
 
     private final Solver solver = new Solver();
 
@@ -38,8 +38,8 @@ public class SudokuBoard extends View {
             thinLineColor = array.getInt(R.styleable.SudokuBoard_thinLineColor, 0);
             cellFillColor = array.getInt(R.styleable.SudokuBoard_cellFillColor,0);
             cellHighlightColor = array.getInt(R.styleable.SudokuBoard_cellHighlightColor,0);
-            latterColor = array.getInt(R.styleable.SudokuBoard_latterColor, 0);
-            latterSolveColor = array.getInt(R.styleable.SudokuBoard_latterSolveColor, 0);
+            textColor = array.getInt(R.styleable.SudokuBoard_textColor, 0);
+            textSolveColor = array.getInt(R.styleable.SudokuBoard_textSolveColor, 0);
         }finally {
             array.recycle();
         }
@@ -72,13 +72,13 @@ public class SudokuBoard extends View {
         cellHighlightColorPaint.setColor(cellHighlightColor);
         cellHighlightColorPaint.setAntiAlias(true);
 
-        latterColorPaint.setStyle(Paint.Style.FILL);
-        latterColorPaint.setAntiAlias(true);
-        latterColorPaint.setColor(latterColor);
+        textColorPaint.setStyle(Paint.Style.FILL);
+        textColorPaint.setAntiAlias(true);
+        textColorPaint.setColor(textColor);
 
         colorCell(canvas, solver.getSelectedRow(), solver.getSelectedColumn());
-        canvas.drawRect(0,0, getWidth(), getHeight(), boardColorPaint);
         drawBoard(canvas);
+        canvas.drawRect(0,0, getWidth(), getHeight(), boardColorPaint);
         drawNumbers(canvas);
     }
 
@@ -107,40 +107,22 @@ public class SudokuBoard extends View {
     private void drawNumbers(Canvas canvas){
 //        Log.i("Drawing", "###########################Drawing Numbers########################");
 //        solver.display();
-        latterColorPaint.setTextSize(cellSize);
+        textColorPaint.setTextSize(cellSize*0.7f);
         for(int r=0; r<9; r++){
             for(int c=0; c<9; c++) {
                 if(solver.getBoard()[r][c] != 0){
                     String text = Integer.toString(solver.getBoard()[r][c]);
                     float width, height;
 
-                    latterColorPaint.getTextBounds(text, 0 ,text.length(), latterPaintBounds);
-                    width = latterColorPaint.measureText(text);
-                    height = latterPaintBounds.height();
+                    textColorPaint.getTextBounds(text, 0 ,text.length(), textPaintBounds);
+                    width = textColorPaint.measureText(text);
+                    height = textPaintBounds.height();
 
                     canvas.drawText(text, c*cellSize+(cellSize-width)/2,
-                            r*cellSize+cellSize-((cellSize-height)/2), latterColorPaint);
+                            r*cellSize+cellSize-((cellSize-height)/2), textColorPaint);
                 }
             }
         }
-
-        /*latterColorPaint.setColor(latterSolveColor);
-        for(ArrayList<Object> letter : solver.getEmptyBoxIndex()){
-            int r = (int)letter.get(0);
-            int c = (int)letter.get(1);
-
-            if(solver.getBoard()[r][c] != 0){
-                String text = Integer.toString(solver.getBoard()[r][c]);
-                float width, height;
-
-                latterColorPaint.getTextBounds(text, 0 ,text.length(), latterPaintBounds);
-                width = latterColorPaint.measureText(text);
-                height = latterPaintBounds.height();
-
-                canvas.drawText(text, c*cellSize+(cellSize-width)/2,
-                        r*cellSize+cellSize-((cellSize-height)/2), latterColorPaint);
-            }
-        }*/
     }
 
     private void colorCell(Canvas canvas, int r, int c){
@@ -158,13 +140,13 @@ public class SudokuBoard extends View {
 
     private void drawThickLine(){
         boardColorPaint.setStyle(Paint.Style.STROKE);
-        boardColorPaint.setStrokeWidth(8);
+        boardColorPaint.setStrokeWidth(6);
         boardColorPaint.setColor(boardColor);
     }
 
     private  void drawThinLine(){
         boardColorPaint.setStyle(Paint.Style.STROKE);
-        boardColorPaint.setStrokeWidth(4);
+        boardColorPaint.setStrokeWidth(2);
         boardColorPaint.setColor(thinLineColor);
     }
 

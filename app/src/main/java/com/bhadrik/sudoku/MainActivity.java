@@ -60,14 +60,30 @@ public class MainActivity extends AppCompatActivity {
         gameBoard.invalidate();
     }
     public void BTNSolvePress(View view){
-        if(gameBoardSolver.solve()){
-            status.setTextColor(Color.parseColor("#72E657"));
-            status.setText("Solved successfully");
+        status.setTextColor(Color.parseColor("#FFC107"));
+
+        switch (gameBoardSolver.validate()){
+            case 0:
+                if(gameBoardSolver.solve()){
+                    status.setTextColor(Color.parseColor("#72E657"));
+                    status.setText("Solved successfully");
+                }
+                else{
+                    status.setTextColor(Color.parseColor("#DF3636"));
+                    status.setText("Unable to solve");
+                }
+                break;
+            case 1:
+                status.setText("Row validation failed");
+                break;
+            case 2:
+                status.setText("Column validation failed");
+                break;
+            case 3:
+                status.setText("Box validation failed");
+                break;
         }
-        else{
-            status.setTextColor(Color.parseColor("#DF3636"));
-            status.setText("Unable to solve");
-        }
+
         gameBoard.invalidate();
     }
 

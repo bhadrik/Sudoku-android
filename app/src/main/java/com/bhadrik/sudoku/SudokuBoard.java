@@ -100,13 +100,7 @@ public class SudokuBoard extends View {
         return isValid;
     }
 
-    private void drawSelection(Canvas canvas){
-
-    }
-
     private void drawNumbers(Canvas canvas){
-//        Log.i("Drawing", "###########################Drawing Numbers########################");
-//        solver.display();
         textColorPaint.setTextSize(cellSize*0.7f);
         for(int r=0; r<9; r++){
             for(int c=0; c<9; c++) {

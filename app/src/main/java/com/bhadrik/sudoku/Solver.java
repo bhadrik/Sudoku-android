@@ -2,6 +2,8 @@ package com.bhadrik.sudoku;
 
 import android.util.Log;
 
+import javax.security.auth.login.LoginException;
+
 public class Solver {
     private static final short MAXLOOP = 20;
 
@@ -18,7 +20,7 @@ public class Solver {
     private short totalEmpty;
 
     //Index helpers
-    private short m = -1, n = -1, value = 0;
+    private Short m = -1, n = -1, value = 0;
 
     private int selectedRow;
     private int selectedColumn;
@@ -28,7 +30,7 @@ public class Solver {
         selectedRow = -1;
         selectedColumn = -1;
 
-        board = new short[][]{
+        /*board = new short[][]{
                 {(short)0, (short)2, (short)0, (short)0, (short)9, (short)0, (short)8, (short)1, (short)0},
                 {(short)3, (short)0, (short)0, (short)8, (short)0, (short)0, (short)9, (short)6, (short)2},
                 {(short)0, (short)0, (short)0, (short)2, (short)0, (short)0, (short)0, (short)3, (short)7},
@@ -38,6 +40,18 @@ public class Solver {
                 {(short)0, (short)1, (short)3, (short)4, (short)7, (short)0, (short)5, (short)0, (short)0},
                 {(short)0, (short)0, (short)7, (short)0, (short)5, (short)0, (short)3, (short)0, (short)0},
                 {(short)2, (short)5, (short)4, (short)6, (short)0, (short)8, (short)1, (short)7, (short)0}
+        };*/
+
+        board = new short[][]{
+                {(short)0, (short)3, (short)1, (short)0, (short)0, (short)0, (short)4, (short)0, (short)0},
+                {(short)0, (short)0, (short)8, (short)0, (short)0, (short)2, (short)0, (short)1, (short)0},
+                {(short)2, (short)0, (short)5, (short)0, (short)9, (short)7, (short)0, (short)0, (short)0},
+                {(short)0, (short)2, (short)0, (short)0, (short)0, (short)0, (short)5, (short)0, (short)0},
+                {(short)0, (short)0, (short)0, (short)6, (short)0, (short)5, (short)0, (short)3, (short)0},
+                {(short)0, (short)0, (short)0, (short)0, (short)0, (short)9, (short)7, (short)0, (short)0},
+                {(short)7, (short)0, (short)0, (short)0, (short)0, (short)0, (short)0, (short)0, (short)9},
+                {(short)0, (short)1, (short)0, (short)4, (short)7, (short)3, (short)2, (short)0, (short)6},
+                {(short)0, (short)0, (short)0, (short)0, (short)0, (short)0, (short)0, (short)0, (short)0}
         };
 
         display();
@@ -49,7 +63,6 @@ public class Solver {
     }
 
     public void processObj(EmptySpace singleObj){
-        Log.i("Solving", "processObj: ENTER");
         short a = 0, b = 0;
         //row
         for (short i = 0; i < 9; i++)
@@ -74,67 +87,72 @@ public class Solver {
         }
 
         //One step ahead search
-        display();
         singleObj.finalProcess(board);
-        Log.w("Solving", "======================AFTER FINAL PROCESS==========================");
-        display();
         deepSearch(singleObj, a, b);
-
-        Log.i("Solving", "processObj: EXIT");
     }
 
     public void deepSearch(EmptySpace singleObj, short a, short b){
         short x = (short)(a + 3), y = (short)(b + 3);
         if (loop > 0)
             for (short l = 1; l < 10; l++)
-                if (singleObj.get(true, l) == 1) {
-                    boolean possible = true;
-                    for (short i = a; i < x; i++) {
-                        for (short j = b; j < y; j++) {
-                            //    objectNumber != 0      Not same object
-                            if (obj[i][j].get(false, (short)3) != 0 && obj[i][j].get(false, (short)3) != singleObj.get(false, (short)3) && !obj[i][j].isFilled()) {
-                                obj[i][j].manualProcess(board);
-                                if (obj[i][j].get(true, l) != 0) { possible = false; break; }
-                            }
+            if (singleObj.get(true, l) == 1) {
+                boolean possible = true;
+                for (short i = a; i < x; i++) {
+                    for (short j = b; j < y; j++) {
+                        //    objectNumber != 0      Not same object
+                        if (obj[i][j].get(false, (short)3) != 0 && obj[i][j].get(false, (short)3) != singleObj.get(false, (short)3) && !obj[i][j].isFilled()) {
+                            obj[i][j].manualProcess(board);
+                            if (obj[i][j].get(true, l) != 0) { possible = false; break; }
                         }
-                        if (!possible) break;
                     }
-                    if (possible) { singleObj.forceApply(board, l); break; }
+                    if (!possible) break;
                 }
+                if (possible) { singleObj.forceApply(board, l); break; }
+            }
     }
 
-    public void athiyo(short p, short q, short value){
+    public void athiyo(){
+        Log.i("Athiyo", "------------------------------APPLY ATHIYO---------------------------");
+        display();
         for (short minimum = 2; minimum < 9; minimum++) {
             for (short r = 0; r < 9; r += 3)
-                for (short l = 0; l < 9; l += 3) {
-                    short x = (short)(r + 3), y = (short)(l + 3);
-                    short emptyObj = 0;
+            for (short l = 0; l < 9; l += 3) {
+                short x = (short)(r + 3), y = (short)(l + 3);
+                short emptyObj = 0;
 
-                    for (short i = r; i < x; i++)
-                        for (short j = l; j < y; j++) {
-                            if (!obj[i][j].isFilled()) { emptyObj++; p = i; q = j; }
-                            if (emptyObj > minimum) break;
-                        }
-
-                    if (emptyObj == minimum)
-                        for (short i = 1; i < 10; i++)
-                            if (obj[p][q].get(true, i) == 1) {
-                                obj[p][q].forceApply(board, i);
-                                value = i;
-                                return;
-                            }
+                for (short i = r; i < x; i++)
+                for (short j = l; j < y; j++) {
+                    if (!obj[i][j].isFilled()) { emptyObj++; m = i; n = j; }
+                    if (emptyObj > minimum) break;
                 }
+
+                if (emptyObj == minimum)
+                for (short i = 1; i < 10; i++)
+                if (obj[m][n].get(true, i) == 1) {
+                    obj[m][n].forceApply(board, i);
+                    Log.i("Applied", "athiyo: APPLIED -> ("+m+","+n+"): "+i);
+                    value = i;
+                    return;
+                }
+            }
             minimum++;
         }
+        display();
     }
 
-    public void fix(short m, short n, short value){
+    public void fix(){
+        Log.i("Athiyo", "------------------------------FIXING ATHIYO---------------------------");
+        display();
+        Log.i("Athiyo", "m,n,value: "+ m + n + value);
+
         obj[m][n].manualProcess(board);
         for (short i = 1; i < 10; i++)
-            if (i != value && obj[m][n].get(true, i) == 1) {
-                obj[m][n].forceApply(board, i);
-                break;
-            }
+        if (i != value && obj[m][n].get(true, i) == 1) {
+            obj[m][n].forceApply(board, i);
+            Log.i("Applied", "fix: APPLIED -> ("+m+","+n+"): "+i);
+            break;
+        }
+        display();
     }
 
     public short countEmptyObject(){
@@ -161,21 +179,19 @@ public class Solver {
         short k = 1;
         //Setup all objects
         for (short i = 0; i < 9; i++)
-            for (short j = 0; j < 9; j++) {
-                obj[i][j] = new EmptySpace();
-                if (board[i][j] == 0) {
-                    obj[i][j].set(false, (short)1, i);	//rowAddress
-                    obj[i][j].set(false, (short)2, j);	//columnAddress
-                    obj[i][j].set(false, (short)3, k);	//objectNumber
-                    k++;
-                    Log.i("Solve", "Row:"+obj[i][j].get(false, (short)1) + " Column:"
-                            + obj[i][j].get(false, (short) 2) + " Num:" + obj[i][j].get(false, (short)3));
-                }
-                else {
-                    obj[i][j].changeStatus(true);
-                    obj[i][j].set(false, (short)3, (short)0);     // objectNumber of already filled number is 0.
-                }
+        for (short j = 0; j < 9; j++) {
+            obj[i][j] = new EmptySpace();
+            if (board[i][j] == 0) {
+                obj[i][j].set(false, (short)1, i);	//rowAddress
+                obj[i][j].set(false, (short)2, j);	//columnAddress
+                obj[i][j].set(false, (short)3, k);	//objectNumber
+                k++;
             }
+            else {
+                obj[i][j].changeStatus(true);
+                obj[i][j].set(false, (short)3, (short)0);     // objectNumber of already filled number is 0.
+            }
+        }
 
         boolean again = true;
         boolean againFix = true;
@@ -191,12 +207,11 @@ public class Solver {
             short temp = totalEmpty;
 
             for (short i = 0; i < 9; i++)
-                for (short j = 0; j < 9; j++) {
-                    if (!obj[i][j].isFilled()) {
-                        Log.i("Solving", "Process object:"+i+", "+j);
-                        processObj(obj[i][j]);
-                    }
+            for (short j = 0; j < 9; j++) {
+                if (!obj[i][j].isFilled()) {
+                    processObj(obj[i][j]);
                 }
+            }
 
             totalEmpty = countEmptyObject();
 
@@ -205,13 +220,13 @@ public class Solver {
                     loopBackup = (short) (loop - 2);
                     boardBackup = board.clone();
                     objBackup = obj.clone();
-                    athiyo(m, n, value);
+                    athiyo();
                     again = false;
                 } else if (againFix) {
                     loop = loopBackup;
                     board = boardBackup.clone();
                     obj = objBackup.clone();
-                    fix(m, n, value);
+                    fix();
                     againFix = false;
                 }
                 if (limit == 4) {
@@ -250,6 +265,7 @@ public class Solver {
     public short[][] getBoard() {
         return board;
     }
+
     public int getSelectedRow() {
         return selectedRow;
     }
@@ -267,14 +283,16 @@ public class Solver {
     }
 
     public void display() {
+        StringBuilder str = new StringBuilder();
+        str.append("\n");
         for(int i=0; i<9; i++){
-            StringBuilder str = new StringBuilder();
             int j = 0;
             for(j=0; j<9; j++){
                 str.append(Integer.toString(board[i][j]) + " ");
             }
-            Log.i("Solving", str.toString());
+            str.append("\n");
         }
+        Log.i("Solving", str.toString());
     }
 
     public void clear(){

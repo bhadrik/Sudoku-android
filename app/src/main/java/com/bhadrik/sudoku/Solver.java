@@ -255,23 +255,24 @@ public class Solver {
             boolean[] columnFrame = new boolean[]{false, false, false ,false ,false ,false ,false ,false ,false, false};
             for(int j=0; j<9; j++){
                 //row validation
-                if(board[i][j] != 0 && board[j][i] != 0){
-                    if(!rowFrame[board[i][j]]){
+                if(board[i][j] != 0) {
+                    if (!rowFrame[board[i][j]]) {
                         rowFrame[board[i][j]] = true;
-                        Log.i("Row", "Row["+i+"]["+j+"]: "+board[i][j]);
-                    }
-                    else{
-                        Log.i("Validate", "validate: ROW VALIDATION FAILD");;
+                        Log.i("Row", "Row[" + i + "][" + j + "]: " + board[i][j]);
+                    } else {
+                        Log.i("Validate", "validate: ROW VALIDATION FAILED");
                         return 1;
                     }
+                }
 
-                    //column validation
+                //column validation
+                if(board[j][i] != 0) {
                     if(!columnFrame[board[j][i]]){
                         columnFrame[board[j][i]] = true;
                         Log.i("Column", "Column["+j+"]["+i+"]: " +board[j][i]);
                     }
                     else{
-                        Log.i("Validate", "validate: COLUMN VALIDATION FAILD");;
+                        Log.i("Validate", "validate: COLUMN VALIDATION FAILED");;
                         return 2;
                     }
                 }

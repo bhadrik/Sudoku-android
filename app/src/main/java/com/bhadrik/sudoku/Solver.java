@@ -2,8 +2,6 @@ package com.bhadrik.sudoku;
 
 import android.util.Log;
 
-import javax.security.auth.login.LoginException;
-
 public class Solver {
     private static final short MAXLOOP = 20;
 
@@ -250,6 +248,73 @@ public class Solver {
         }
     }
 
+    public int validate(){
+        //row & column validation
+        for(int i=0; i<9; i++){
+            boolean[] rowFrame = new boolean[]{false, false, false ,false ,false ,false ,false ,false ,false, false};
+            boolean[] columnFrame = new boolean[]{false, false, false ,false ,false ,false ,false ,false ,false, false};
+            for(int j=0; j<9; j++){
+                //row validation
+                if(board[i][j] != 0 && board[j][i] != 0){
+                    if(!rowFrame[board[i][j]]){
+                        rowFrame[board[i][j]] = true;
+                        Log.i("Row", "Row["+i+"]["+j+"]: "+board[i][j]);
+                    }
+                    else{
+                        Log.i("Validate", "validate: ROW VALIDATION FAILD");;
+                        return 1;
+                    }
+
+                    //column validation
+                    if(!columnFrame[board[j][i]]){
+                        columnFrame[board[j][i]] = true;
+                        Log.i("Column", "Column["+j+"]["+i+"]: " +board[j][i]);
+                    }
+                    else{
+                        Log.i("Validate", "validate: COLUMN VALIDATION FAILD");;
+                        return 2;
+                    }
+                }
+            }
+        }
+
+        //Box validation
+        /*
+        *    0  1  2  3  4  5  6  7  8
+        * 0  (00)     (03)     (06)
+        * 1
+        * 2
+        * 3  (30)     (33)     (36)
+        * 4
+        * 5
+        * 6  (60)     (63)     (66)
+        * 7
+        * 8
+        */
+
+        for (int boxi = 0; boxi < 9; boxi+=3){
+            for (int boxj = 0; boxj < 9; boxj+=3){
+                boolean[] Frame = new boolean[]{false, false, false ,false ,false ,false ,false ,false ,false, false};
+                for (int i = boxi; i<boxi + 3; i++){
+                    for (int j = boxj; j< boxj + 3; j++){
+                        if(board[i][j] != 0){
+                            if(!Frame[board[i][j]]){
+                                Frame[board[i][j]] = true;
+                                Log.i("Boxx", "Box["+i+"]["+j+"]: "+board[i][j]);
+                            }
+                            else{
+                                Log.i("Validate", "validate: Box VALIDATION FAILED");
+                                return 3;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        return 0;
+    }
+
     //--------------UI METHODS-------------------
     public void setNumberPosition(short num){
         if(selectedRow != -1 && selectedColumn != -1){
@@ -284,7 +349,6 @@ public class Solver {
 
     public void display() {
         StringBuilder str = new StringBuilder();
-        str.append("\n");
         for(int i=0; i<9; i++){
             int j = 0;
             for(j=0; j<9; j++){

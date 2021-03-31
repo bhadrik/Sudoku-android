@@ -2,6 +2,7 @@ package com.bhadrik.sudoku;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -60,9 +61,11 @@ public class MainActivity extends AppCompatActivity {
     }
     public void BTNSolvePress(View view){
         if(gameBoardSolver.solve()){
+            status.setTextColor(Color.parseColor("#72E657"));
             status.setText("Solved successfully");
         }
         else{
+            status.setTextColor(Color.parseColor("#DF3636"));
             status.setText("Unable to solve");
         }
         gameBoard.invalidate();

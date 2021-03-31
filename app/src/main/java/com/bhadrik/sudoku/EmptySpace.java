@@ -1,5 +1,7 @@
 package com.bhadrik.sudoku;
 
+import android.util.Log;
+
 public class EmptySpace {
     private short objectNum;
     private short possibleNum;
@@ -24,6 +26,7 @@ public class EmptySpace {
 
     private void apply(short[][] sudoku){
         sudoku[rowAddress][columnAddress] = applicableNum;
+        Log.i("Apply", "" + applicableNum);
         status = true;
     }
 

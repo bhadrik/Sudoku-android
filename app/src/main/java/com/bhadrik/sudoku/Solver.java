@@ -174,6 +174,13 @@ public class Solver {
     public boolean solve(){
         Log.i("Solving", "Start solving");
 
+        empty = countEmptyField();
+        totalEmpty = empty;
+
+        if(empty > 72){
+            return false;
+        }
+
         short k = 1;
         //Setup all objects
         for (short i = 0; i < 9; i++)
